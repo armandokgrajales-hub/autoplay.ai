@@ -1,5 +1,10 @@
 name: Build Geode Mod
-on: [push, pull_request]
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -9,14 +14,14 @@ jobs:
         config:
           - name: Android
             os: ubuntu-latest
+            target: Android
+
     runs-on: ${{ matrix.config.os }}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Build Mod
         uses: geode-sdk/build-geode-mod@main
         with:
-          sdk: v3.0.0-beta.1
-          android: true
-          combined: true
+          bindings: v3.0.0-beta.1
