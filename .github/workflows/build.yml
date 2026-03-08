@@ -1,27 +1,22 @@
 name: Build Geode Mod
 
-on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   build:
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - name: Android
-            os: ubuntu-latest
-            target: Android
-
-    runs-on: ${{ matrix.config.os }}
-
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Build Mod
+        id: build
         uses: geode-sdk/build-geode-mod@main
         with:
-          bindings: v3.0.0-beta.1
+          target: Android64
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build
+          path: ${{ steps.build.outputs.build-output }}
